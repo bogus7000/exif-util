@@ -7,6 +7,8 @@ import {
 import cli from "cli-ux";
 import * as signal from "signale";
 import * as fs from "fs";
+const chalk = require("chalk");
+const CFonts = require("cfonts");
 
 export default class ScanDir extends Command {
   static description = "Scan a directory with images images";
@@ -24,8 +26,7 @@ export default class ScanDir extends Command {
   };
 
   async run() {
-    // Clear
-    console.clear();
+    this.welcome();
 
     // Args and argv
     const { argv } = this.parse(ScanDir);
@@ -50,6 +51,32 @@ export default class ScanDir extends Command {
   }
 
   // Main steps
+
+  // Step 0
+  welcome(): void {
+    console.clear();
+    this.log("\n");
+    CFonts.say("EXIF-CLI", {
+      font: "simple", // define the font face
+      align: "left", // define text alignment
+      colors: ["green"], // define all colors
+      background: "transparent", // define the background color, you can also use `backgroundColor` here as key
+      letterSpacing: 1, // define letter spacing
+      lineHeight: 1, // define the line height
+      space: false, // define if the output text should have empty lines on top and on the bottom
+      maxLength: "10", // define how many character can be on one line
+      gradient: false, // define your two gradient colors
+      independentGradient: false, // define if you want to recalculate the gradient for each new line
+      transitionGradient: false, // define if this is a transition between colors directly
+      env: "node", // define the environment CFonts is being executed in
+    });
+    this.log("\n");
+    this.log(
+      chalk.bgGreen.black(`  exif-cli version ${this.config.version}   `)
+    );
+    this.log("\n");
+    this.showSeparator();
+  }
   // Step 1
   validateDir(argv: string[]) {
     const sig = new signal.Signale({
@@ -109,6 +136,7 @@ export default class ScanDir extends Command {
       barCompleteChar: "\u2588",
       barIncompleteChar: "\u2591",
     });
+    this.log("\n");
     customBar.start(files.length / 2, 0);
     for (let index = 0; index < files.length; index += 2) {
       const tags1 = await parser.getImageTags(files[index]);
@@ -120,6 +148,7 @@ export default class ScanDir extends Command {
       customBar.increment();
     }
     customBar.stop();
+    this.log("\n");
     this.showSeparator();
     sig.success("Finished comparing");
     return results;
@@ -142,10 +171,13 @@ export default class ScanDir extends Command {
     tree.insert(`Average DateTime Delta: ${report.avgDateTimeDelta} seconds`);
     sig.success("Report ready");
     this.showSeparator();
+    this.log("\n");
     this.log("Scan Report");
     tree.display();
+    this.log("\n");
     this.showSeparator();
     sig.complete("Directory scan complete. Exiting now...");
+    this.log("\n");
   }
 
   // Helper
