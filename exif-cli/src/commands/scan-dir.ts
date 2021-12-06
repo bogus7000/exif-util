@@ -1,5 +1,10 @@
 import { Command, flags } from "@oclif/command";
-import { ImageParser, ImageTagsComparison } from "./util/image-parser";
+import {
+  DirScanReport,
+  ImageParser,
+  ImageTagsComparison,
+} from "../util/image-parser";
+import cli from "cli-ux";
 
 export default class ScanDir extends Command {
   static description = "Scan a directory with images images";
@@ -13,65 +18,62 @@ export default class ScanDir extends Command {
   ];
 
   async run() {
-    const { args, flags } = this.parse(ScanDir);
+    console.clear();
 
     const { argv } = this.parse(ScanDir);
-    console.log(`running my command with args: ${argv[0]}, ${argv[1]}`);
 
-    // if (args.file && flags.force) {
-    //   this.log(`you input --force and --file: ${args.file}`);
-    // }
+    cli.action.start("Initializing parser...");
     const parser = new ImageParser(argv[0]);
     await parser.init();
+    cli.action.stop();
+    cli.action.start("Preparing file list...");
     const files = parser.files;
-    const results: ImageTagsComparison[] = [];
+    cli.action.stop();
 
-    console.log("Scanning files...");
-    console.log("-------------------------");
+    const results: ImageTagsComparison[] = [];
+    this.log("Scanning files...");
+    this.showSeparator();
+
+    const customBar = cli.progress({
+      format: "PROGRESS | {bar} | {value}/{total} Image Pairs",
+      barCompleteChar: "\u2588",
+      barIncompleteChar: "\u2591",
+    });
+    customBar.start(files.length / 2, 0);
     for (let index = 0; index < files.length; index += 2) {
-      console.log("Scanning files " + index + " and " + (index + 1) + "...");
       const tags1 = await parser.getImageTags(files[index]);
       const tags2 = await parser.getImageTags(files[index + 1]);
       const result = parser.compareImageTags(tags1, tags2);
       delete result["img1Tags"];
       delete result["img2Tags"];
       results.push(result);
+      customBar.increment();
     }
+    customBar.stop();
 
-    console.log("-------------------------");
-    console.log("Scan complete. Comparison Table -> ");
-    console.table(results);
-    console.log("-------------------------");
-    console.log("Scan complete. Report -> ");
-    console.log("Scanned files: " + files.length);
-    console.log("Scanned file pairs: " + results.length);
-    const withDiff = results.filter((res) => !res.identical);
-    console.log(
-      "Pairs with identical tags: " + (results.length - withDiff.length)
-    );
-    console.log("Pairs with differences in tags: " + withDiff.length);
-    console.log(
-      `Average Altitude Delta: ${parser
-        .calculateAvgDelta(parser.altDeltas)
-        .toFixed(10)} degrees`
-    );
-    console.log(
-      `Average Latitude Delta: ${parser
-        .calculateAvgDelta(parser.latDeltas)
-        .toFixed(10)} degrees`
-    );
-    console.log(
-      `Average Longitude Delta: ${parser
-        .calculateAvgDelta(parser.longDeltas)
-        .toFixed(10)} degrees`
-    );
-    console.log(
-      `Average DateTime Delta: ${parser
-        .calculateAvgDelta(parser.dateDeltas)
-        .toFixed(10)} seconds`
-    );
-    // console.log(results[0].img1Tags);
-    // console.log(results[0].img2Tags);
+    this.showSeparator();
+
+    const report = parser.getScanReport(results, 10);
+    this.showReportTree(report);
+
     parser.destroy();
+  }
+
+  private showReportTree(report: DirScanReport): void {
+    const tree = cli.tree();
+    tree.insert(`Images Scanned: ${report.imagesScanned}`);
+    tree.insert(`Pairs Scanned: ${report.imagePairsScanned}`);
+    tree.insert(`Pairs With Identical Tags: ${report.pairsWithIdenticalTags}`);
+    tree.insert(`Pairs With Different Tags: ${report.pairsWithDifferentTags}`);
+    tree.insert(`Average Longitude Delta: ${report.avgLonDelta} degrees`);
+    tree.insert(`Average Latitude Delta: ${report.avgLatDelta} degrees`);
+    tree.insert(`Average Altitude Delta: ${report.avgAltDelta} degrees`);
+    tree.insert(`Average DateTime Delta: ${report.avgDateTimeDelta} seconds`);
+    this.log("Scan Report");
+    tree.display();
+  }
+
+  private showSeparator(): void {
+    this.log("-------------------------");
   }
 }

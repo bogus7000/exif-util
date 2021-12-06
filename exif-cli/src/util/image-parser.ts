@@ -10,6 +10,17 @@ export interface ImageTagsComparison {
   img2Tags?: ExifTags;
 }
 
+export interface DirScanReport {
+  imagesScanned: number;
+  imagePairsScanned: number;
+  pairsWithIdenticalTags: number;
+  pairsWithDifferentTags: number;
+  avgAltDelta: string;
+  avgLatDelta: string;
+  avgLonDelta: string;
+  avgDateTimeDelta: string;
+}
+
 export class ImageParser {
   private dirPath: string;
   private _files: string[] = [];
@@ -147,6 +158,24 @@ export class ImageParser {
   public calculateAvgDelta(arr: number[]): number {
     const reducer = (accumulator: number, curr: number) => accumulator + curr;
     return arr.reduce(reducer) / arr.length;
+  }
+
+  public getScanReport(
+    comparisonResults: ImageTagsComparison[],
+    round: number
+  ): DirScanReport {
+    return {
+      imagesScanned: this.files.length,
+      imagePairsScanned: this.files.length / 2,
+      pairsWithIdenticalTags: comparisonResults.filter((res) => res.identical)
+        .length,
+      pairsWithDifferentTags: comparisonResults.filter((res) => !res.identical)
+        .length,
+      avgAltDelta: this.calculateAvgDelta(this._altDeltas).toFixed(round),
+      avgLatDelta: this.calculateAvgDelta(this._latDeltas).toFixed(round),
+      avgLonDelta: this.calculateAvgDelta(this._longDeltas).toFixed(round),
+      avgDateTimeDelta: this.calculateAvgDelta(this._dateDeltas).toFixed(round),
+    };
   }
 
   private calculateDelta(a: number, b: number): number {
