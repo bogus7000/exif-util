@@ -30,6 +30,7 @@ USAGE
 <!-- commands -->
 * [`exif-cli hello [FILE]`](#exif-cli-hello-file)
 * [`exif-cli help [COMMAND]`](#exif-cli-help-command)
+* [`exif-cli scan-dir [FILE]`](#exif-cli-scan-dir-file)
 
 ## `exif-cli hello [FILE]`
 
@@ -67,4 +68,20 @@ OPTIONS
 ```
 
 _See code: [@oclif/plugin-help](https://github.com/oclif/plugin-help/blob/v3.2.10/src/commands/help.ts)_
+
+## `exif-cli scan-dir [FILE]`
+
+describe the command here
+
+```
+USAGE
+  $ exif-cli scan-dir [FILE]
+
+OPTIONS
+  -f, --force
+  -h, --help       show CLI help
+  -n, --name=name  name to print
+```
+
+_See code: [src/commands/scan-dir.ts](https://github.com/kbd-overlord/exif-cli/blob/v0.0.0/src/commands/scan-dir.ts)_
 <!-- commandsstop -->
