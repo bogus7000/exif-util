@@ -7,6 +7,7 @@ import {
 import cli from "cli-ux";
 import * as signal from "signale";
 import * as fs from "fs";
+import inquirer = require("inquirer");
 const chalk = require("chalk");
 const CFonts = require("cfonts");
 
@@ -17,9 +18,7 @@ export default class ScanDir extends Command {
     help: flags.help({ char: "h" }),
   };
 
-  static args = [
-    { name: "directory", required: true, description: "Path to directory" },
-  ];
+  static args = [{ name: "directory", description: "Path to directory" }];
 
   options = {
     scope: "exif-cli",
@@ -29,25 +28,116 @@ export default class ScanDir extends Command {
     this.welcome();
 
     // Args and argv
-    const { argv } = this.parse(ScanDir);
+    const { argv, args } = this.parse(ScanDir);
 
-    // Validate directory
-    this.validateDir(argv);
+    let dir = args.directory;
+    if (!args.directory) {
+      const sig = new signal.Signale({
+        ...this.options,
+      });
+      sig.warn(`Directory not provided in args. Please choose..`);
+      this.showSeparator();
+      this.log("\n");
+      const homedir: string = require("os").homedir();
+      inquirer.registerPrompt("fuzzypath", require("inquirer-fuzzy-path"));
+      await inquirer
+        .prompt([
+          {
+            type: "fuzzypath",
+            name: "directory",
+            excludePath: (nodePath: string) => nodePath.includes("."),
+            excludeFilter: (nodePath: string) => nodePath.includes("."),
+            itemType: "directory",
+            rootPath: homedir,
+            message: "Select a target directory for scanning:",
+            suggestOnly: false,
+            depthLimit: 4,
+          },
+        ])
+        .then((response) => {
+          dir = response.directory;
+          this.log("\n");
+          this.showSeparator();
+        })
+        .catch((err) => {
+          this.catch(err);
+        });
+    }
 
-    // Initialize parser
-    const parser = await this.initializeParser(argv);
+    if (dir) {
+      // Validate directory
+      this.validateDir(dir);
 
-    // File list
-    const files = this.prepFileList(parser);
+      // Initialize parser
+      const parser = await this.initializeParser(dir);
 
-    // Compare
-    const results = await this.compareImageTags(parser, files);
+      // File list
+      const files = this.prepFileList(parser);
 
-    // Show report
-    const report = parser.getScanReport(results, 10);
-    this.showReportTree(report);
+      // Compare
+      const results = await this.compareImageTags(parser, files);
 
-    parser.destroy();
+      // Show report
+      let showReport = true;
+      this.showSeparator();
+      this.log("\n");
+      await inquirer
+        .prompt([
+          {
+            type: "confirm",
+            name: "showReport",
+            message: "Show scan report?",
+            default: true,
+          },
+        ])
+        .then((response) => {
+          showReport = response.showReport;
+          if (showReport) {
+            this.log("\n");
+            this.showSeparator();
+          }
+        });
+
+      if (showReport) {
+        const report = parser.getScanReport(results, 10);
+        this.showReportTree(report);
+      }
+
+      // Show comparison
+      let showComparison = true;
+      this.log("\n");
+      this.showSeparator();
+      this.log("\n");
+      await inquirer
+        .prompt([
+          {
+            type: "confirm",
+            name: "showComparison",
+            message: "Show comparison table?",
+            default: true,
+          },
+        ])
+        .then((response) => {
+          showComparison = response.showComparison;
+          if (showComparison) {
+            this.log("\n");
+            this.showSeparator();
+          }
+        });
+
+      if (showComparison) {
+        console.table(results);
+      }
+
+      this.log("\n");
+      this.showSeparator();
+      const sig = new signal.Signale({
+        ...this.options,
+      });
+      sig.complete("Directory scan complete. Exiting now...");
+      this.log("\n");
+      parser.destroy();
+    }
   }
 
   // Main steps
@@ -78,13 +168,13 @@ export default class ScanDir extends Command {
     this.showSeparator();
   }
   // Step 1
-  validateDir(argv: string[]) {
+  validateDir(dir: string) {
     const sig = new signal.Signale({
       ...this.options,
     });
-    sig.start(`Preparing to scan directory at ${argv[0]}`);
+    sig.start(`Preparing to scan directory at ${dir}`);
     sig.await("Checking directory...");
-    if (fs.existsSync(argv[0])) {
+    if (fs.existsSync(dir)) {
       sig.success("Directory exists");
     } else {
       throw new Error("Directory does not exist");
@@ -92,12 +182,12 @@ export default class ScanDir extends Command {
   }
 
   // Step 2
-  async initializeParser(argv: string[]): Promise<ImageParser> {
+  async initializeParser(dir: string): Promise<ImageParser> {
     const sig = new signal.Signale({
       ...this.options,
     });
     sig.await("Initializing parser...");
-    const parser = new ImageParser(argv[0]);
+    const parser = new ImageParser(dir);
     await parser.init();
     sig.success("Parser initialized");
     return parser;
@@ -150,7 +240,7 @@ export default class ScanDir extends Command {
     customBar.stop();
     this.log("\n");
     this.showSeparator();
-    sig.success("Finished comparing");
+    sig.success("Finished comparison");
     return results;
   }
 
@@ -174,10 +264,6 @@ export default class ScanDir extends Command {
     this.log("\n");
     this.log("Scan Report");
     tree.display();
-    this.log("\n");
-    this.showSeparator();
-    sig.complete("Directory scan complete. Exiting now...");
-    this.log("\n");
   }
 
   // Helper
@@ -189,6 +275,9 @@ export default class ScanDir extends Command {
     const sig = new signal.Signale({
       ...this.options,
     });
+
+    this.log("\n");
     sig.error(error);
+    this.exit(1);
   }
 }
