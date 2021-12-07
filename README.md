@@ -3,7 +3,7 @@
 CLI for inspecting and comparing exif tags
 
 [![oclif](https://img.shields.io/badge/cli-oclif-brightgreen.svg)](https://oclif.io)
-[![License](https://img.shields.io/npm/l/exif-util.svg)](https://github.com/kbd-overlord/exif-util/tree/main/package.json)
+[![License](https://img.shields.io/npm/l/exif-util.svg)](https://github.com/kbd-overlord/exif-util/package.json)
 
 <!-- [![Version](https://img.shields.io/npm/v/exif-util.svg)](https://npmjs.org/package/exif-util) -->
 <!-- [![Downloads/week](https://img.shields.io/npm/dw/exif-util.svg)](https://npmjs.org/package/exif-util) -->
