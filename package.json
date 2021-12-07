@@ -1,12 +1,12 @@
 {
-  "name": "exif-cli",
+  "name": "exif-util",
   "description": "CLI for inspecting and comparing exif tags",
   "version": "0.0.2-alpha",
   "author": "kbd-overlord",
   "bin": {
-    "exif-cli": "./bin/run"
+    "exif-util": "./bin/run"
   },
-  "bugs": "https://github.com/kbd-overlord/exif-cli/issues",
+  "bugs": "https://github.com/kbd-overlord/exif-util/issues",
   "devDependencies": {
     "@oclif/dev-cli": "^1.26.7",
     "@oclif/test": "^1.2.8",
@@ -36,7 +36,7 @@
     "/npm-shrinkwrap.json",
     "/oclif.manifest.json"
   ],
-  "homepage": "https://github.com/kbd-overlord/exif-cli",
+  "homepage": "https://github.com/kbd-overlord/exif-util",
   "keywords": [
     "oclif"
   ],
@@ -44,12 +44,12 @@
   "main": "lib/index.js",
   "oclif": {
     "commands": "./lib/commands",
-    "bin": "exif-cli",
+    "bin": "exif-util",
     "plugins": [
       "@oclif/plugin-help"
     ]
   },
-  "repository": "kbd-overlord/exif-cli",
+  "repository": "kbd-overlord/exif-util",
   "scripts": {
     "postpack": "rm -f oclif.manifest.json",
     "posttest": "eslint . --ext .ts --config .eslintrc",

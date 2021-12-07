@@ -21,7 +21,7 @@ export default class ScanDir extends Command {
   static args = [{ name: "directory", description: "Path to directory" }];
 
   options = {
-    scope: "exif-cli",
+    scope: "exif-util",
   };
 
   async run() {
@@ -146,7 +146,7 @@ export default class ScanDir extends Command {
   welcome(): void {
     console.clear();
     this.log("\n");
-    CFonts.say("EXIF-CLI", {
+    CFonts.say("exif-util", {
       font: "simple", // define the font face
       align: "left", // define text alignment
       colors: ["green"], // define all colors
@@ -162,7 +162,7 @@ export default class ScanDir extends Command {
     });
     this.log("\n");
     this.log(
-      chalk.bgGreen.black(`  exif-cli version ${this.config.version}   `)
+      chalk.bgGreen.black(`  exif-util version ${this.config.version}   `)
     );
     this.log("\n");
     this.showSeparator();
