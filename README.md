@@ -1,19 +1,24 @@
-exif-cli
-========
+# exif-cli
 
 CLI for inspecting and comparing exif tags
 
 [![oclif](https://img.shields.io/badge/cli-oclif-brightgreen.svg)](https://oclif.io)
-[![Version](https://img.shields.io/npm/v/exif-cli.svg)](https://npmjs.org/package/exif-cli)
-[![Downloads/week](https://img.shields.io/npm/dw/exif-cli.svg)](https://npmjs.org/package/exif-cli)
+
+<!-- [![Version](https://img.shields.io/npm/v/exif-cli.svg)](https://npmjs.org/package/exif-cli) -->
+<!-- [![Downloads/week](https://img.shields.io/npm/dw/exif-cli.svg)](https://npmjs.org/package/exif-cli) -->
+
 [![License](https://img.shields.io/npm/l/exif-cli.svg)](https://github.com/kbd-overlord/exif-cli/blob/master/package.json)
 
 <!-- toc -->
-* [Usage](#usage)
-* [Commands](#commands)
+
+- [Usage](#usage)
+- [Commands](#commands)
 <!-- tocstop -->
+
 # Usage
+
 <!-- usage -->
+
 ```sh-session
 $ npm install -g exif-cli
 $ exif-cli COMMAND
@@ -25,12 +30,16 @@ USAGE
   $ exif-cli COMMAND
 ...
 ```
+
 <!-- usagestop -->
+
 # Commands
+
 <!-- commands -->
-* [`exif-cli hello [FILE]`](#exif-cli-hello-file)
-* [`exif-cli help [COMMAND]`](#exif-cli-help-command)
-* [`exif-cli scan-dir [FILE]`](#exif-cli-scan-dir-file)
+
+- [`exif-cli hello [FILE]`](#exif-cli-hello-file)
+- [`exif-cli help [COMMAND]`](#exif-cli-help-command)
+- [`exif-cli scan-dir [FILE]`](#exif-cli-scan-dir-file)
 
 ## `exif-cli hello [FILE]`
 
@@ -84,4 +93,5 @@ OPTIONS
 ```
 
 _See code: [src/commands/scan-dir.ts](https://github.com/kbd-overlord/exif-cli/blob/v0.0.0/src/commands/scan-dir.ts)_
+
 <!-- commandsstop -->
