@@ -9,58 +9,33 @@ CLI for inspecting and comparing exif tags
 <!-- [![Downloads/week](https://img.shields.io/npm/dw/exif-cli.svg)](https://npmjs.org/package/exif-cli) -->
 
 <!-- toc -->
-
-- [exif-cli](#exif-cli)
-- [Usage](#usage)
-- [Commands](#commands)
+* [exif-cli](#exif-cli)
+* [Usage](#usage)
+* [Commands](#commands)
 <!-- tocstop -->
 
 # Usage
 
 <!-- usage -->
-
 ```sh-session
 $ npm install -g exif-cli
 $ exif-cli COMMAND
 running command...
 $ exif-cli (-v|--version|version)
-exif-cli/1.0.1 linux-x64 node-v16.13.0
+exif-cli/1.0.2 linux-x64 node-v16.13.0
 $ exif-cli --help [COMMAND]
 USAGE
   $ exif-cli COMMAND
 ...
 ```
-
 <!-- usagestop -->
 
 # Commands
 
 <!-- commands -->
-
-- [`exif-cli hello [FILE]`](#exif-cli-hello-file)
-- [`exif-cli help [COMMAND]`](#exif-cli-help-command)
-- [`exif-cli scan-dir [DIRECTORY]`](#exif-cli-scan-dir-directory)
-- [`exif-cli scan-file [FILE]`](#exif-cli-scan-file-file)
-
-## `exif-cli hello [FILE]`
-
-describe the command here
-
-```
-USAGE
-  $ exif-cli hello [FILE]
-
-OPTIONS
-  -f, --force
-  -h, --help       show CLI help
-  -n, --name=name  name to print
-
-EXAMPLE
-  $ exif-cli hello
-  hello world from ./src/hello.ts!
-```
-
-_See code: [src/commands/hello.ts](https://github.com/kbd-overlord/exif-cli/blob/v1.0.1/src/commands/hello.ts)_
+* [`exif-cli help [COMMAND]`](#exif-cli-help-command)
+* [`exif-cli scan-dir [DIRECTORY]`](#exif-cli-scan-dir-directory)
+* [`exif-cli scan-file [FILE]`](#exif-cli-scan-file-file)
 
 ## `exif-cli help [COMMAND]`
 
@@ -94,7 +69,7 @@ OPTIONS
   -h, --help  show CLI help
 ```
 
-_See code: [src/commands/scan-dir.ts](https://github.com/kbd-overlord/exif-cli/blob/v1.0.1/src/commands/scan-dir.ts)_
+_See code: [src/commands/scan-dir.ts](https://github.com/kbd-overlord/exif-cli/blob/v1.0.2/src/commands/scan-dir.ts)_
 
 ## `exif-cli scan-file [FILE]`
 
@@ -111,6 +86,5 @@ OPTIONS
   -h, --help  show CLI help
 ```
 
-_See code: [src/commands/scan-file.ts](https://github.com/kbd-overlord/exif-cli/blob/v1.0.1/src/commands/scan-file.ts)_
-
+_See code: [src/commands/scan-file.ts](https://github.com/kbd-overlord/exif-cli/blob/v1.0.2/src/commands/scan-file.ts)_
 <!-- commandsstop -->
