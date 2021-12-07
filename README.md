@@ -22,7 +22,7 @@ $ npm install -g exif-cli
 $ exif-cli COMMAND
 running command...
 $ exif-cli (-v|--version|version)
-exif-cli/1.0.2 linux-x64 node-v16.13.0
+exif-cli/0.0.2 linux-x64 node-v16.13.0
 $ exif-cli --help [COMMAND]
 USAGE
   $ exif-cli COMMAND
@@ -69,7 +69,7 @@ OPTIONS
   -h, --help  show CLI help
 ```
 
-_See code: [src/commands/scan-dir.ts](https://github.com/kbd-overlord/exif-cli/blob/v1.0.2/src/commands/scan-dir.ts)_
+_See code: [src/commands/scan-dir.ts](https://github.com/kbd-overlord/exif-cli/blob/v0.0.2/src/commands/scan-dir.ts)_
 
 ## `exif-cli scan-file [FILE]`
 
@@ -86,5 +86,5 @@ OPTIONS
   -h, --help  show CLI help
 ```
 
-_See code: [src/commands/scan-file.ts](https://github.com/kbd-overlord/exif-cli/blob/v1.0.2/src/commands/scan-file.ts)_
+_See code: [src/commands/scan-file.ts](https://github.com/kbd-overlord/exif-cli/blob/v0.0.2/src/commands/scan-file.ts)_
 <!-- commandsstop -->
