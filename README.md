@@ -10,36 +10,33 @@ CLI for inspecting and comparing exif tags
 [![License](https://img.shields.io/npm/l/exif-cli.svg)](https://github.com/kbd-overlord/exif-cli/blob/master/package.json)
 
 <!-- toc -->
-
-- [Usage](#usage)
-- [Commands](#commands)
+* [exif-cli](#exif-cli)
+* [Usage](#usage)
+* [Commands](#commands)
 <!-- tocstop -->
 
 # Usage
 
 <!-- usage -->
-
 ```sh-session
 $ npm install -g exif-cli
 $ exif-cli COMMAND
 running command...
 $ exif-cli (-v|--version|version)
-exif-cli/0.0.0 linux-x64 node-v16.13.0
+exif-cli/1.0.0 linux-x64 node-v16.13.0
 $ exif-cli --help [COMMAND]
 USAGE
   $ exif-cli COMMAND
 ...
 ```
-
 <!-- usagestop -->
 
 # Commands
 
 <!-- commands -->
-
-- [`exif-cli hello [FILE]`](#exif-cli-hello-file)
-- [`exif-cli help [COMMAND]`](#exif-cli-help-command)
-- [`exif-cli scan-dir [FILE]`](#exif-cli-scan-dir-file)
+* [`exif-cli hello [FILE]`](#exif-cli-hello-file)
+* [`exif-cli help [COMMAND]`](#exif-cli-help-command)
+* [`exif-cli scan-dir [DIRECTORY]`](#exif-cli-scan-dir-directory)
 
 ## `exif-cli hello [FILE]`
 
@@ -59,7 +56,7 @@ EXAMPLE
   hello world from ./src/hello.ts!
 ```
 
-_See code: [src/commands/hello.ts](https://github.com/kbd-overlord/exif-cli/blob/v0.0.0/src/commands/hello.ts)_
+_See code: [src/commands/hello.ts](https://github.com/kbd-overlord/exif-cli/blob/v1.0.0/src/commands/hello.ts)_
 
 ## `exif-cli help [COMMAND]`
 
@@ -76,22 +73,22 @@ OPTIONS
   --all  see all commands in CLI
 ```
 
-_See code: [@oclif/plugin-help](https://github.com/oclif/plugin-help/blob/v3.2.10/src/commands/help.ts)_
+_See code: [@oclif/plugin-help](https://github.com/oclif/plugin-help/blob/v3.2.12/src/commands/help.ts)_
 
-## `exif-cli scan-dir [FILE]`
+## `exif-cli scan-dir [DIRECTORY]`
 
-describe the command here
+Scan a directory with images images
 
 ```
 USAGE
-  $ exif-cli scan-dir [FILE]
+  $ exif-cli scan-dir [DIRECTORY]
+
+ARGUMENTS
+  DIRECTORY  Path to directory
 
 OPTIONS
-  -f, --force
-  -h, --help       show CLI help
-  -n, --name=name  name to print
+  -h, --help  show CLI help
 ```
 
-_See code: [src/commands/scan-dir.ts](https://github.com/kbd-overlord/exif-cli/blob/v0.0.0/src/commands/scan-dir.ts)_
-
+_See code: [src/commands/scan-dir.ts](https://github.com/kbd-overlord/exif-cli/blob/v1.0.0/src/commands/scan-dir.ts)_
 <!-- commandsstop -->
