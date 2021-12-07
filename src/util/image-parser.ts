@@ -22,7 +22,7 @@ export interface DirScanReport {
 }
 
 export class ImageParser {
-  private dirPath: string;
+  private dirPath: string | undefined;
   private _files: string[] = [];
   public get files(): string[] {
     return this._files;
@@ -44,16 +44,28 @@ export class ImageParser {
     return this._dateDeltas;
   }
 
-  constructor(dirPath: string) {
-    this.dirPath = dirPath;
+  constructor(dirPath?: string) {
+    if (dirPath) {
+      this.dirPath = dirPath;
+    }
   }
 
   public async init(): Promise<void> {
-    this._files = await fs.readdir(this.dirPath);
+    if (this.dirPath) {
+      this._files = await fs.readdir(this.dirPath);
+    }
   }
 
-  public async getImageTags(imgPath: string): Promise<ExifTags> {
-    const file = await fs.readFile(this.dirPath + "/" + imgPath);
+  public async getImageTags(
+    imgPath: string,
+    mode: "dir" | "file" = "dir"
+  ): Promise<ExifTags> {
+    let file: Buffer;
+    if (mode === "file") {
+      file = await fs.readFile(imgPath);
+    } else {
+      file = await fs.readFile(this.dirPath + "/" + imgPath);
+    }
     let tags: ExifTags = {};
     const result = ExifParserFactory.create(file).parse().tags;
     if (result) {

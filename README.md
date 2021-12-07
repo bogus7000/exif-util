@@ -37,6 +37,7 @@ USAGE
 * [`exif-cli hello [FILE]`](#exif-cli-hello-file)
 * [`exif-cli help [COMMAND]`](#exif-cli-help-command)
 * [`exif-cli scan-dir [DIRECTORY]`](#exif-cli-scan-dir-directory)
+* [`exif-cli scan-file [FILE]`](#exif-cli-scan-file-file)
 
 ## `exif-cli hello [FILE]`
 
@@ -91,4 +92,20 @@ OPTIONS
 ```
 
 _See code: [src/commands/scan-dir.ts](https://github.com/kbd-overlord/exif-cli/blob/v1.0.0/src/commands/scan-dir.ts)_
+
+## `exif-cli scan-file [FILE]`
+
+describe the command here
+
+```
+USAGE
+  $ exif-cli scan-file [FILE]
+
+OPTIONS
+  -f, --force
+  -h, --help       show CLI help
+  -n, --name=name  name to print
+```
+
+_See code: [src/commands/scan-file.ts](https://github.com/kbd-overlord/exif-cli/blob/v1.0.0/src/commands/scan-file.ts)_
 <!-- commandsstop -->
