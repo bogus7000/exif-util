@@ -255,9 +255,17 @@ export default class ScanDir extends Command {
     tree.insert(`Pairs Scanned: ${report.imagePairsScanned}`);
     tree.insert(`Pairs With Identical Tags: ${report.pairsWithIdenticalTags}`);
     tree.insert(`Pairs With Different Tags: ${report.pairsWithDifferentTags}`);
+    tree.insert(`Min Longitude: ${report.minLong} degrees`);
+    tree.insert(`Max Longitude: ${report.maxLong} degrees`);
     tree.insert(`Average Longitude Delta: ${report.avgLonDelta} degrees`);
+    tree.insert(`Min Latitude: ${report.minLat} degrees`);
+    tree.insert(`Max Latitude: ${report.maxLat} degrees`);
     tree.insert(`Average Latitude Delta: ${report.avgLatDelta} degrees`);
+    tree.insert(`Min Altitude: ${report.minAlt} degrees`);
+    tree.insert(`Max Altitude: ${report.maxAlt} degrees`);
     tree.insert(`Average Altitude Delta: ${report.avgAltDelta} degrees`);
+    tree.insert(`Min DateTime: ${report.minDateTime} degrees`);
+    tree.insert(`Max DateTime: ${report.maxDateTime} degrees`);
     tree.insert(`Average DateTime Delta: ${report.avgDateTimeDelta} seconds`);
     sig.success("Report ready");
     this.showSeparator();

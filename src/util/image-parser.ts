@@ -16,9 +16,17 @@ export interface DirScanReport {
   pairsWithIdenticalTags: number;
   pairsWithDifferentTags: number;
   avgAltDelta: string;
+  minAlt: string;
+  maxAlt: string;
   avgLatDelta: string;
+  minLat: string;
+  maxLat: string;
   avgLonDelta: string;
+  minLong: string;
+  maxLong: string;
   avgDateTimeDelta: string;
+  minDateTime: string;
+  maxDateTime: string;
 }
 
 export class ImageParser {
@@ -28,21 +36,13 @@ export class ImageParser {
     return this._files;
   }
   private _altDeltas: number[] = [];
-  public get altDeltas(): number[] {
-    return this._altDeltas;
-  }
+  private _altitudeValues: number[] = [];
   private _latDeltas: number[] = [];
-  public get latDeltas(): number[] {
-    return this._latDeltas;
-  }
+  private _latitudeValues: number[] = [];
   private _longDeltas: number[] = [];
-  public get longDeltas(): number[] {
-    return this._longDeltas;
-  }
+  private _longitudeValues: number[] = [];
   private _dateDeltas: number[] = [];
-  public get dateDeltas(): number[] {
-    return this._dateDeltas;
-  }
+  private _dateTimeValues: number[] = [];
 
   constructor(dirPath?: string) {
     if (dirPath) {
@@ -73,7 +73,23 @@ export class ImageParser {
     } else {
       throw new Error("Could not extract tags");
     }
+    this.logTags(tags);
     return tags;
+  }
+
+  logTags(tags: ExifTags): void {
+    if (tags.GPSAltitude) {
+      this._altitudeValues.push(tags.GPSAltitude);
+    }
+    if (tags.GPSLatitude) {
+      this._latitudeValues.push(tags.GPSLatitude);
+    }
+    if (tags.GPSLongitude) {
+      this._longitudeValues.push(tags.GPSLongitude);
+    }
+    if (tags.DateTimeOriginal) {
+      this._dateTimeValues.push(tags.DateTimeOriginal);
+    }
   }
 
   public compareImageTags(a: ExifTags, b: ExifTags): ImageTagsComparison {
@@ -147,19 +163,19 @@ export class ImageParser {
   private logDiff(delta: number, label: keyof ExifTags): void {
     switch (label) {
       case "GPSAltitude":
-        this.altDeltas.push(delta);
+        this._altDeltas.push(delta);
         break;
 
       case "GPSLatitude":
-        this.latDeltas.push(delta);
+        this._latDeltas.push(delta);
         break;
 
       case "GPSLongitude":
-        this.longDeltas.push(delta);
+        this._longDeltas.push(delta);
         break;
 
       case "DateTimeOriginal":
-        this.dateDeltas.push(delta);
+        this._dateDeltas.push(delta);
         break;
 
       default:
@@ -183,9 +199,17 @@ export class ImageParser {
         .length,
       pairsWithDifferentTags: comparisonResults.filter((res) => !res.identical)
         .length,
+      minAlt: Math.min(...this._altitudeValues).toFixed(round),
+      maxAlt: Math.max(...this._altitudeValues).toFixed(round),
       avgAltDelta: this.calculateAvgDelta(this._altDeltas).toFixed(round),
+      minLat: Math.min(...this._latitudeValues).toFixed(round),
+      maxLat: Math.max(...this._latitudeValues).toFixed(round),
       avgLatDelta: this.calculateAvgDelta(this._latDeltas).toFixed(round),
+      minLong: Math.min(...this._longitudeValues).toFixed(round),
+      maxLong: Math.max(...this._longitudeValues).toFixed(round),
       avgLonDelta: this.calculateAvgDelta(this._longDeltas).toFixed(round),
+      minDateTime: Math.min(...this._dateTimeValues).toFixed(round),
+      maxDateTime: Math.max(...this._dateTimeValues).toFixed(round),
       avgDateTimeDelta: this.calculateAvgDelta(this._dateDeltas).toFixed(round),
     };
   }
