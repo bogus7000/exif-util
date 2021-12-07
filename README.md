@@ -23,7 +23,7 @@ $ npm install -g exif-cli
 $ exif-cli COMMAND
 running command...
 $ exif-cli (-v|--version|version)
-exif-cli/1.0.0 linux-x64 node-v16.13.0
+exif-cli/1.0.1 linux-x64 node-v16.13.0
 $ exif-cli --help [COMMAND]
 USAGE
   $ exif-cli COMMAND
@@ -57,7 +57,7 @@ EXAMPLE
   hello world from ./src/hello.ts!
 ```
 
-_See code: [src/commands/hello.ts](https://github.com/kbd-overlord/exif-cli/blob/v1.0.0/src/commands/hello.ts)_
+_See code: [src/commands/hello.ts](https://github.com/kbd-overlord/exif-cli/blob/v1.0.1/src/commands/hello.ts)_
 
 ## `exif-cli help [COMMAND]`
 
@@ -91,7 +91,7 @@ OPTIONS
   -h, --help  show CLI help
 ```
 
-_See code: [src/commands/scan-dir.ts](https://github.com/kbd-overlord/exif-cli/blob/v1.0.0/src/commands/scan-dir.ts)_
+_See code: [src/commands/scan-dir.ts](https://github.com/kbd-overlord/exif-cli/blob/v1.0.1/src/commands/scan-dir.ts)_
 
 ## `exif-cli scan-file [FILE]`
 
@@ -101,11 +101,12 @@ describe the command here
 USAGE
   $ exif-cli scan-file [FILE]
 
+ARGUMENTS
+  FILE  Path file
+
 OPTIONS
-  -f, --force
-  -h, --help       show CLI help
-  -n, --name=name  name to print
+  -h, --help  show CLI help
 ```
 
-_See code: [src/commands/scan-file.ts](https://github.com/kbd-overlord/exif-cli/blob/v1.0.0/src/commands/scan-file.ts)_
+_See code: [src/commands/scan-file.ts](https://github.com/kbd-overlord/exif-cli/blob/v1.0.1/src/commands/scan-file.ts)_
 <!-- commandsstop -->
