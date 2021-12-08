@@ -74,7 +74,7 @@ export default class ScanFile extends Command {
             depthLimit: 2,
           },
         ])
-        .then((response) => {
+        .then((response: any) => {
           file = response.file;
           this.log("\n");
           this.showSeparator();

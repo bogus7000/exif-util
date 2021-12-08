@@ -17,8 +17,8 @@ export default class ScanDir extends Command {
   static flags = {
     help: flags.help({ char: "h" }),
     directory: flags.string({
-      name: "file",
-      description: "Path to file",
+      name: "directory",
+      description: "Path to directory",
     }),
     export: flags.boolean({
       description: "Enable export of scan report and comparison",
@@ -76,7 +76,7 @@ export default class ScanDir extends Command {
             depthLimit: 4,
           },
         ])
-        .then((response) => {
+        .then((response: any) => {
           dir = response.directory;
           this.log("\n");
           this.showSeparator();
@@ -112,7 +112,7 @@ export default class ScanDir extends Command {
             default: true,
           },
         ])
-        .then((response) => {
+        .then((response: any) => {
           showReport = response.showReport;
           if (showReport) {
             this.log("\n");
@@ -137,7 +137,7 @@ export default class ScanDir extends Command {
             default: true,
           },
         ])
-        .then((response) => {
+        .then((response: any) => {
           showComparison = response.showComparison;
           if (showComparison) {
             this.log("\n");
