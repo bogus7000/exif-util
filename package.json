@@ -1,7 +1,7 @@
 {
   "name": "exif-util",
   "description": "CLI for inspecting and comparing exif tags",
-  "version": "0.0.3",
+  "version": "0.0.3alpha",
   "author": "kbd-overlord",
   "bin": {
     "exif-util": "./bin/run"
