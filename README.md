@@ -32,9 +32,26 @@ USAGE
 # Commands
 
 <!-- commands -->
+* [`exif-util find-pairs [FILE]`](#exif-util-find-pairs-file)
 * [`exif-util help [COMMAND]`](#exif-util-help-command)
 * [`exif-util scan-dir`](#exif-util-scan-dir)
 * [`exif-util scan-file`](#exif-util-scan-file)
+
+## `exif-util find-pairs [FILE]`
+
+describe the command here
+
+```
+USAGE
+  $ exif-util find-pairs [FILE]
+
+OPTIONS
+  -f, --force
+  -h, --help       show CLI help
+  -n, --name=name  name to print
+```
+
+_See code: [src/commands/find-pairs.ts](https://github.com/kbd-overlord/exif-util/blob/v0.0.3alpha/src/commands/find-pairs.ts)_
 
 ## `exif-util help [COMMAND]`
 
