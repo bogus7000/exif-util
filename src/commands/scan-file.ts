@@ -4,15 +4,27 @@ const chalk = require("chalk");
 import * as signal from "signale";
 import inquirer = require("inquirer");
 import { ImageParser } from "../helper/image-parser";
+import * as fs from "fs";
 
 export default class ScanFile extends Command {
   static description = "describe the command here";
 
   static flags = {
     help: flags.help({ char: "h" }),
+    file: flags.string({
+      name: "file",
+      description: "Path to file",
+    }),
+    export: flags.boolean({
+      description: "Enable export of scan report and comparison table",
+      default: false,
+    }),
+    exportAs: flags.string({
+      description: "Set export format",
+      options: ["json"],
+      dependsOn: ["export"],
+    }),
   };
-
-  static args = [{ name: "file", description: "Path file" }];
 
   options = {
     scope: "exif-util",
@@ -21,14 +33,29 @@ export default class ScanFile extends Command {
   async run() {
     this.welcome();
 
-    const { args } = this.parse(ScanFile);
+    const sig = new signal.Signale({
+      ...this.options,
+    });
 
-    let file = args.file;
+    const { flags } = this.parse(ScanFile);
+
+    if (flags.export) {
+      sig.info("--export is enabled");
+
+      if (flags.exportAs) {
+        sig.info(`--exportAs set to ${flags.exportAs}`);
+      } else {
+        sig.warn(`Export format not specified. Export will not be executed`);
+        sig.info(`Use --exportAs flag to specify format`);
+      }
+    }
+
+    let file = flags.file;
     if (!file) {
       const sig = new signal.Signale({
         ...this.options,
       });
-      sig.warn(`File not provided in args. Please choose one`);
+      sig.warn(`File not provided in flags. Please choose one`);
       this.showSeparator();
       this.log("\n");
       const homedir: string = require("os").homedir();
@@ -38,6 +65,8 @@ export default class ScanFile extends Command {
           {
             type: "fuzzypath",
             name: "file",
+            excludeFilter: (nodePath: string) =>
+              !nodePath.toLowerCase().endsWith(".jpg"),
             itemType: "file",
             rootPath: homedir,
             message: "Select file for scanning:",
@@ -56,10 +85,6 @@ export default class ScanFile extends Command {
     }
 
     if (file) {
-      const sig = new signal.Signale({
-        ...this.options,
-      });
-
       // Initialize parser
       const parser = await this.initializeParser();
       const tags = await parser.getImageTags(file, "file");
@@ -69,8 +94,15 @@ export default class ScanFile extends Command {
       this.log(tags);
       this.log("\n");
       this.showSeparator();
+
+      if (flags.export && flags.exportAs) {
+        this.exportTags(tags, file);
+      }
+
       sig.complete("File scan complete. Exiting now...");
+      this.showSeparator();
       this.log("\n");
+
       parser.destroy();
     }
   }
@@ -113,6 +145,23 @@ export default class ScanFile extends Command {
     await parser.init();
     sig.success("Parser initialized");
     return parser;
+  }
+
+  // Step 2
+  exportTags(tags: any, file: string): void {
+    const sig = new signal.Signale({
+      ...this.options,
+    });
+
+    const split = file.split("/");
+    let fileName = split.pop();
+    fileName = fileName?.split(".")[0];
+    const path = split.join("/") + "/" + `${fileName}_exif_tags.json`;
+
+    sig.await("Exporting tags...");
+    let data = JSON.stringify(tags);
+    fs.writeFileSync(path, data);
+    sig.success(`Tags exported successfully. File: ${path}`);
   }
 
   // Helper
