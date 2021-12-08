@@ -16,9 +16,20 @@ export default class ScanDir extends Command {
 
   static flags = {
     help: flags.help({ char: "h" }),
+    directory: flags.string({
+      name: "file",
+      description: "Path to file",
+    }),
+    export: flags.boolean({
+      description: "Enable export of scan report and comparison",
+      default: false,
+    }),
+    exportAs: flags.string({
+      description: "Set export format. Currently supported: [json]",
+      options: ["json"],
+      dependsOn: ["export"],
+    }),
   };
-
-  static args = [{ name: "directory", description: "Path to directory" }];
 
   options = {
     scope: "exif-util",
@@ -27,15 +38,26 @@ export default class ScanDir extends Command {
   async run() {
     this.welcome();
 
-    // Args and argv
-    const { argv, args } = this.parse(ScanDir);
+    const sig = new signal.Signale({
+      ...this.options,
+    });
 
-    let dir = args.directory;
-    if (!args.directory) {
-      const sig = new signal.Signale({
-        ...this.options,
-      });
-      sig.warn(`Directory not provided in args. Please choose..`);
+    const { flags } = this.parse(ScanDir);
+
+    if (flags.export) {
+      sig.info("--export is enabled");
+
+      if (flags.exportAs) {
+        sig.info(`--exportAs set to ${flags.exportAs}`);
+      } else {
+        sig.warn(`Export format not specified. Export will not be executed`);
+        sig.info(`Use --exportAs flag to specify format`);
+      }
+    }
+
+    let dir = flags.directory;
+    if (!flags.directory) {
+      sig.warn(`Directory not provided in flags. Please choose..`);
       this.showSeparator();
       this.log("\n");
       const homedir: string = require("os").homedir();
@@ -100,20 +122,18 @@ export default class ScanDir extends Command {
 
       if (showReport) {
         const report = parser.getScanReport(results, 10);
-        this.showReportTree(report);
+        this.showReportTree(report, flags, parser);
       }
 
       // Show comparison
       let showComparison = true;
-      this.log("\n");
-      this.showSeparator();
       this.log("\n");
       await inquirer
         .prompt([
           {
             type: "confirm",
             name: "showComparison",
-            message: "Show comparison table?",
+            message: "Show comparison?",
             default: true,
           },
         ])
@@ -122,18 +142,27 @@ export default class ScanDir extends Command {
           if (showComparison) {
             this.log("\n");
             this.showSeparator();
+            this.log("\n");
           }
         });
 
       if (showComparison) {
         console.log(results);
       }
+      if (flags.export && flags.exportAs) {
+        this.log("\n");
+        this.showSeparator();
+        const path = parser.dirPath + "/" + "scan-comparison.json";
+
+        sig.await("Exporting comparison...");
+        let data = JSON.stringify(results);
+        fs.writeFileSync(path, data);
+        sig.success(`Comparison exported successfully. File: ${path}`);
+        this.showSeparator();
+      }
 
       this.log("\n");
       this.showSeparator();
-      const sig = new signal.Signale({
-        ...this.options,
-      });
       sig.complete("Directory scan complete. Exiting now...");
       this.log("\n");
       parser.destroy();
@@ -245,7 +274,11 @@ export default class ScanDir extends Command {
   }
 
   // Step 5
-  private showReportTree(report: DirScanReport): void {
+  private showReportTree(
+    report: DirScanReport,
+    flags: any,
+    parser: ImageParser
+  ): void {
     const sig = new signal.Signale({
       ...this.options,
     });
@@ -272,6 +305,18 @@ export default class ScanDir extends Command {
     this.log("\n");
     this.log("Scan Report");
     tree.display();
+
+    if (flags.export && flags.exportAs) {
+      this.log("\n");
+      this.showSeparator();
+      const path = parser.dirPath + "/" + "scan-report.json";
+
+      sig.await("Exporting report...");
+      let data = JSON.stringify(report);
+      fs.writeFileSync(path, data);
+      sig.success(`Report exported successfully. File: ${path}`);
+      this.showSeparator();
+    }
   }
 
   // Helper

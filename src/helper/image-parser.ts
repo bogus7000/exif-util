@@ -31,7 +31,10 @@ export interface DirScanReport {
 }
 
 export class ImageParser {
-  private dirPath: string | undefined;
+  private _dirPath: string | undefined;
+  public get dirPath(): string | undefined {
+    return this._dirPath;
+  }
   private _files: string[] = [];
   public get files(): string[] {
     return this._files;
@@ -41,15 +44,15 @@ export class ImageParser {
   private _longDeltas: number[] = [];
   private _dateDeltas: number[] = [];
 
-  constructor(dirPath?: string) {
-    if (dirPath) {
-      this.dirPath = dirPath;
+  constructor(_dirPath?: string) {
+    if (_dirPath) {
+      this._dirPath = _dirPath;
     }
   }
 
   public async init(): Promise<void> {
-    if (this.dirPath) {
-      this._files = await fs.readdir(this.dirPath);
+    if (this._dirPath) {
+      this._files = await fs.readdir(this._dirPath);
     }
   }
 
@@ -65,7 +68,7 @@ export class ImageParser {
       const { stdout, stderr } = await exec(fileCommand);
       tags = JSON.parse(this.escapeSpecialChars(stdout))[0];
     } else {
-      let dirCommand = `exiftool ${this.dirPath + "/" + imgPath} ${options}`;
+      let dirCommand = `exiftool ${this._dirPath + "/" + imgPath} ${options}`;
       const { stdout, stderr } = await exec(dirCommand);
       tags = JSON.parse(this.escapeSpecialChars(stdout))[0];
     }

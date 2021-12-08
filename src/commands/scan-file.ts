@@ -16,11 +16,11 @@ export default class ScanFile extends Command {
       description: "Path to file",
     }),
     export: flags.boolean({
-      description: "Enable export of scan report and comparison table",
+      description: "Enable export of image exif tags",
       default: false,
     }),
     exportAs: flags.string({
-      description: "Set export format",
+      description: "Set export format. Currently supported: [json]",
       options: ["json"],
       dependsOn: ["export"],
     }),
