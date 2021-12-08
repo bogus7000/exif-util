@@ -67,7 +67,6 @@
     "inquirer": "^8.2.0",
     "inquirer-fuzzy-path": "^2.3.0",
     "signale": "^1.4.0",
-    "ts-exif-parser": "^0.2.2",
     "tslib": "^1.14.1"
   }
 }

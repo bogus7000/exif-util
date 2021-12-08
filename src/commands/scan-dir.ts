@@ -3,7 +3,7 @@ import {
   DirScanReport,
   ImageParser,
   ImageTagsComparison,
-} from "../util/image-parser";
+} from "../helper/image-parser";
 import cli from "cli-ux";
 import * as signal from "signale";
 import * as fs from "fs";
@@ -126,7 +126,7 @@ export default class ScanDir extends Command {
         });
 
       if (showComparison) {
-        console.table(results);
+        console.log(results);
       }
 
       this.log("\n");
@@ -232,8 +232,8 @@ export default class ScanDir extends Command {
       const tags1 = await parser.getImageTags(files[index]);
       const tags2 = await parser.getImageTags(files[index + 1]);
       const result = parser.compareImageTags(tags1, tags2);
-      delete result["img1Tags"];
-      delete result["img2Tags"];
+      delete result.img1Tags;
+      delete result.img2Tags;
       results.push(result);
       customBar.increment();
     }
@@ -255,18 +255,18 @@ export default class ScanDir extends Command {
     tree.insert(`Pairs Scanned: ${report.imagePairsScanned}`);
     tree.insert(`Pairs With Identical Tags: ${report.pairsWithIdenticalTags}`);
     tree.insert(`Pairs With Different Tags: ${report.pairsWithDifferentTags}`);
-    tree.insert(`Min Longitude: ${report.minLong} degrees`);
-    tree.insert(`Max Longitude: ${report.maxLong} degrees`);
-    tree.insert(`Average Longitude Delta: ${report.avgLonDelta} degrees`);
-    tree.insert(`Min Latitude: ${report.minLat} degrees`);
-    tree.insert(`Max Latitude: ${report.maxLat} degrees`);
+    tree.insert(`Average Longitude Delta: ${report.avgLongDelta} degrees`);
+    tree.insert(`Min Longitude Delta: ${report.minLongDelta} degrees`);
+    tree.insert(`Max Longitude Delta: ${report.maxLongDelta} degrees`);
     tree.insert(`Average Latitude Delta: ${report.avgLatDelta} degrees`);
-    tree.insert(`Min Altitude: ${report.minAlt} degrees`);
-    tree.insert(`Max Altitude: ${report.maxAlt} degrees`);
+    tree.insert(`Min Latitude Delta: ${report.minLatDelta} degrees`);
+    tree.insert(`Max LatitudeDelta: ${report.maxLatDelta} degrees`);
     tree.insert(`Average Altitude Delta: ${report.avgAltDelta} degrees`);
-    tree.insert(`Min DateTime: ${report.minDateTime} degrees`);
-    tree.insert(`Max DateTime: ${report.maxDateTime} degrees`);
+    tree.insert(`Min Altitude Delta: ${report.minAltDelta} degrees`);
+    tree.insert(`Max Altitude Delta: ${report.maxAltDelta} degrees`);
     tree.insert(`Average DateTime Delta: ${report.avgDateTimeDelta} seconds`);
+    tree.insert(`Min DateTime Delta: ${report.minDateTimeDelta} degrees`);
+    tree.insert(`Max DateTime Delta: ${report.maxDateTimeDelta} degrees`);
     sig.success("Report ready");
     this.showSeparator();
     this.log("\n");

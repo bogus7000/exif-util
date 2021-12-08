@@ -1,13 +1,14 @@
-import { ExifParserFactory, ExifTags } from "ts-exif-parser";
 import { promises as fs } from "fs";
+import * as util from "util";
+const exec = util.promisify(require("child_process").exec);
 
 export interface ImageTagsComparison {
   img1: string;
   img2: string;
   identical: boolean;
   difference?: string;
-  img1Tags?: ExifTags;
-  img2Tags?: ExifTags;
+  img1Tags?: any;
+  img2Tags?: any;
 }
 
 export interface DirScanReport {
@@ -16,17 +17,17 @@ export interface DirScanReport {
   pairsWithIdenticalTags: number;
   pairsWithDifferentTags: number;
   avgAltDelta: string;
-  minAlt: string;
-  maxAlt: string;
+  minAltDelta: string;
+  maxAltDelta: string;
   avgLatDelta: string;
-  minLat: string;
-  maxLat: string;
-  avgLonDelta: string;
-  minLong: string;
-  maxLong: string;
+  minLatDelta: string;
+  maxLatDelta: string;
+  avgLongDelta: string;
+  minLongDelta: string;
+  maxLongDelta: string;
   avgDateTimeDelta: string;
-  minDateTime: string;
-  maxDateTime: string;
+  minDateTimeDelta: string;
+  maxDateTimeDelta: string;
 }
 
 export class ImageParser {
@@ -36,13 +37,9 @@ export class ImageParser {
     return this._files;
   }
   private _altDeltas: number[] = [];
-  private _altitudeValues: number[] = [];
   private _latDeltas: number[] = [];
-  private _latitudeValues: number[] = [];
   private _longDeltas: number[] = [];
-  private _longitudeValues: number[] = [];
   private _dateDeltas: number[] = [];
-  private _dateTimeValues: number[] = [];
 
   constructor(dirPath?: string) {
     if (dirPath) {
@@ -59,40 +56,40 @@ export class ImageParser {
   public async getImageTags(
     imgPath: string,
     mode: "dir" | "file" = "dir"
-  ): Promise<ExifTags> {
-    let file: Buffer;
+  ): Promise<any> {
+    let tags: any;
+
+    const options = "-j -n -sort";
     if (mode === "file") {
-      file = await fs.readFile(imgPath);
+      let fileCommand = `exiftool ${imgPath} ${options}`;
+      const { stdout, stderr } = await exec(fileCommand);
+      tags = JSON.parse(this.escapeSpecialChars(stdout))[0];
     } else {
-      file = await fs.readFile(this.dirPath + "/" + imgPath);
+      let dirCommand = `exiftool ${this.dirPath + "/" + imgPath} ${options}`;
+      const { stdout, stderr } = await exec(dirCommand);
+      tags = JSON.parse(this.escapeSpecialChars(stdout))[0];
     }
-    let tags: ExifTags = {};
-    const result = ExifParserFactory.create(file).parse().tags;
-    if (result) {
-      tags = result;
-    } else {
+
+    if (!tags) {
       throw new Error("Could not extract tags");
     }
-    this.logTags(tags);
+
+    const split = tags.DateTimeOriginal.split(" ");
+    const start = split[0].replaceAll(":", "-");
+    const end = split[1].split(".")[0];
+    const newDate = start + "T" + end;
+    tags.DateTimeOriginal = parseInt(
+      (new Date(newDate).getTime() / 1000).toFixed(0)
+    );
+
     return tags;
   }
 
-  logTags(tags: ExifTags): void {
-    if (tags.GPSAltitude) {
-      this._altitudeValues.push(tags.GPSAltitude);
-    }
-    if (tags.GPSLatitude) {
-      this._latitudeValues.push(tags.GPSLatitude);
-    }
-    if (tags.GPSLongitude) {
-      this._longitudeValues.push(tags.GPSLongitude);
-    }
-    if (tags.DateTimeOriginal) {
-      this._dateTimeValues.push(tags.DateTimeOriginal);
-    }
+  escapeSpecialChars(dirtyJson: string): string {
+    return dirtyJson.replace(/\\n/g, "\\n");
   }
 
-  public compareImageTags(a: ExifTags, b: ExifTags): ImageTagsComparison {
+  public compareImageTags(a: any, b: any): ImageTagsComparison {
     const sameAltitude = a.GPSAltitude === b.GPSAltitude;
     const sameLatitude = a.GPSLatitude === b.GPSLatitude;
     const sameLongitude = a.GPSLongitude === b.GPSLongitude;
@@ -153,14 +150,14 @@ export class ImageParser {
     return res;
   }
 
-  private getDeltaString(a: number, b: number, label: keyof ExifTags): string {
+  private getDeltaString(a: number, b: number, label: string): string {
     let delta = 0;
     delta = this.calculateDelta(a, b);
     this.logDiff(delta, label);
-    return `${label}: [${a}] vs [${b}]. Delta: [${delta.toFixed(6)}]; `;
+    return `${label}: [${a}] vs [${b}]. Delta: [${delta.toFixed(10)}]; `;
   }
 
-  private logDiff(delta: number, label: keyof ExifTags): void {
+  private logDiff(delta: number, label: string): void {
     switch (label) {
       case "GPSAltitude":
         this._altDeltas.push(delta);
@@ -184,8 +181,12 @@ export class ImageParser {
   }
 
   public calculateAvgDelta(arr: number[]): number {
-    const reducer = (accumulator: number, curr: number) => accumulator + curr;
-    return arr.reduce(reducer) / arr.length;
+    if (arr.length >= 1) {
+      const reducer = (accumulator: number, curr: number) => accumulator + curr;
+      return arr.reduce(reducer) / arr.length;
+    } else {
+      return 0;
+    }
   }
 
   public getScanReport(
@@ -199,18 +200,18 @@ export class ImageParser {
         .length,
       pairsWithDifferentTags: comparisonResults.filter((res) => !res.identical)
         .length,
-      minAlt: Math.min(...this._altitudeValues).toFixed(round),
-      maxAlt: Math.max(...this._altitudeValues).toFixed(round),
       avgAltDelta: this.calculateAvgDelta(this._altDeltas).toFixed(round),
-      minLat: Math.min(...this._latitudeValues).toFixed(round),
-      maxLat: Math.max(...this._latitudeValues).toFixed(round),
+      minAltDelta: Math.min(...this._altDeltas).toFixed(round),
+      maxAltDelta: Math.max(...this._altDeltas).toFixed(round),
       avgLatDelta: this.calculateAvgDelta(this._latDeltas).toFixed(round),
-      minLong: Math.min(...this._longitudeValues).toFixed(round),
-      maxLong: Math.max(...this._longitudeValues).toFixed(round),
-      avgLonDelta: this.calculateAvgDelta(this._longDeltas).toFixed(round),
-      minDateTime: Math.min(...this._dateTimeValues).toFixed(round),
-      maxDateTime: Math.max(...this._dateTimeValues).toFixed(round),
+      minLatDelta: Math.min(...this._latDeltas).toFixed(round),
+      maxLatDelta: Math.max(...this._latDeltas).toFixed(round),
+      avgLongDelta: this.calculateAvgDelta(this._longDeltas).toFixed(round),
+      minLongDelta: Math.min(...this._longDeltas).toFixed(round),
+      maxLongDelta: Math.max(...this._longDeltas).toFixed(round),
       avgDateTimeDelta: this.calculateAvgDelta(this._dateDeltas).toFixed(round),
+      minDateTimeDelta: Math.min(...this._dateDeltas).toFixed(round),
+      maxDateTimeDelta: Math.max(...this._dateDeltas).toFixed(round),
     };
   }
 

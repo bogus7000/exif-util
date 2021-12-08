@@ -3,7 +3,7 @@ const CFonts = require("cfonts");
 const chalk = require("chalk");
 import * as signal from "signale";
 import inquirer = require("inquirer");
-import { ImageParser } from "../util/image-parser";
+import { ImageParser } from "../helper/image-parser";
 
 export default class ScanFile extends Command {
   static description = "describe the command here";
@@ -38,10 +38,6 @@ export default class ScanFile extends Command {
           {
             type: "fuzzypath",
             name: "file",
-            // excludePath: (nodePath: string) =>
-            //   !nodePath.toLowerCase().endsWith(".jpg"),
-            // excludeFilter: (nodePath: string) =>
-            //   !nodePath.toLowerCase().endsWith(".jpg"),
             itemType: "file",
             rootPath: homedir,
             message: "Select file for scanning:",
@@ -67,25 +63,12 @@ export default class ScanFile extends Command {
       // Initialize parser
       const parser = await this.initializeParser();
       const tags = await parser.getImageTags(file, "file");
-      const nestedTags = {
-        GPSVersionID: tags.GPSVersionID,
-        SubjectArea: tags.SubjectArea,
-      };
-      delete tags.GPSVersionID;
-      delete tags.SubjectArea;
 
       this.showSeparator();
       this.log("\n");
-      console.table(tags);
+      this.log(tags);
       this.log("\n");
       this.showSeparator();
-      sig.info(`Showing tags with array values`);
-      this.showSeparator();
-      this.log("\n");
-      console.table(nestedTags);
-      this.log("\n");
-      this.showSeparator();
-
       sig.complete("File scan complete. Exiting now...");
       this.log("\n");
       parser.destroy();
