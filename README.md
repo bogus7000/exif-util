@@ -21,7 +21,7 @@ $ npm install -g exif-util
 $ exif-util COMMAND
 running command...
 $ exif-util (-v|--version|version)
-exif-util/0.0.4 linux-x64 node-v16.13.0
+exif-util/0.0.4-alpha linux-x64 node-v16.13.0
 $ exif-util --help [COMMAND]
 USAGE
   $ exif-util COMMAND
@@ -58,7 +58,7 @@ OPTIONS
   --startsWith=RGB|Radiometric             Specify which image comes first
 ```
 
-_See code: [src/commands/find-pairs.ts](https://github.com/kbd-overlord/exif-util/blob/v0.0.4/src/commands/find-pairs.ts)_
+_See code: [src/commands/find-pairs.ts](https://github.com/kbd-overlord/exif-util/blob/v0.0.4-alpha/src/commands/find-pairs.ts)_
 
 ## `exif-util help [COMMAND]`
 
@@ -92,7 +92,7 @@ OPTIONS
   --exportAs=json        Set export format. Currently supported: [json]
 ```
 
-_See code: [src/commands/scan-dir.ts](https://github.com/kbd-overlord/exif-util/blob/v0.0.4/src/commands/scan-dir.ts)_
+_See code: [src/commands/scan-dir.ts](https://github.com/kbd-overlord/exif-util/blob/v0.0.4-alpha/src/commands/scan-dir.ts)_
 
 ## `exif-util scan-file`
 
@@ -109,5 +109,5 @@ OPTIONS
   --file=file      Path to file
 ```
 
-_See code: [src/commands/scan-file.ts](https://github.com/kbd-overlord/exif-util/blob/v0.0.4/src/commands/scan-file.ts)_
+_See code: [src/commands/scan-file.ts](https://github.com/kbd-overlord/exif-util/blob/v0.0.4-alpha/src/commands/scan-file.ts)_
 <!-- commandsstop -->
