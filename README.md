@@ -36,6 +36,7 @@ USAGE
 * [`exif-util help [COMMAND]`](#exif-util-help-command)
 * [`exif-util scan-dir`](#exif-util-scan-dir)
 * [`exif-util scan-file`](#exif-util-scan-file)
+* [`exif-util shuffle-dir [FILE]`](#exif-util-shuffle-dir-file)
 
 ## `exif-util find-pairs PATH`
 
@@ -110,4 +111,20 @@ OPTIONS
 ```
 
 _See code: [src/commands/scan-file.ts](https://github.com/kbd-overlord/exif-util/blob/v0.0.4-alpha/src/commands/scan-file.ts)_
+
+## `exif-util shuffle-dir [FILE]`
+
+describe the command here
+
+```
+USAGE
+  $ exif-util shuffle-dir [FILE]
+
+OPTIONS
+  -f, --force
+  -h, --help       show CLI help
+  -n, --name=name  name to print
+```
+
+_See code: [src/commands/shuffle-dir.ts](https://github.com/kbd-overlord/exif-util/blob/v0.0.4-alpha/src/commands/shuffle-dir.ts)_
 <!-- commandsstop -->

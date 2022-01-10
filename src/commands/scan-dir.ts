@@ -8,6 +8,7 @@ import cli from "cli-ux";
 import * as signal from "signale";
 import * as fs from "fs";
 import inquirer = require("inquirer");
+import { ImagePair } from "../model";
 const chalk = require("chalk");
 const CFonts = require("cfonts");
 
@@ -95,6 +96,17 @@ export default class ScanDir extends Command {
 
       // File list
       const files = this.prepFileList(parser);
+
+      // const pairs: ImagePair[] = [];
+      // for (let index = 0; index < files.length; index += 2) {
+      //   pairs.push({ a: files[index], b: files[index + 1] });
+      // }
+      // console.log(pairs);
+      // const path = parser.dirPath + "/" + "pairing.json";
+      // let data = JSON.stringify(pairs);
+      // fs.writeFileSync(path, data);
+      // sig.success(`Pairing exported successfully. File: ${path}`);
+      // this.exit(0);
 
       // Compare
       const results = await this.compareImageTags(parser, files);

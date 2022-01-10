@@ -71,7 +71,7 @@ export default class ScanFile extends Command {
             rootPath: homedir,
             message: "Select file for scanning:",
             suggestOnly: false,
-            depthLimit: 2,
+            depthLimit: 4,
           },
         ])
         .then((response: any) => {
