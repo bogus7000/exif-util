@@ -122,7 +122,7 @@ export default class FindPairs extends BaseCommand {
               "Found these Radiometric images:",
               verbose
             );
-            const pairs = await this.customFindOne(
+            const pairs = await this.customFindPairsV1(
               parsedRGBs,
               parsedRadiometrics,
               parsedFlags,
@@ -204,7 +204,7 @@ export default class FindPairs extends BaseCommand {
     return parsedImages.filter((img) => !this.isRadiometric(img));
   }
 
-  async customFindOne(
+  async customFindPairsV1(
     RGBs: ParsedImage[],
     radiometrics: ParsedImage[],
     f: OutputFlags<typeof FindPairs.flags>,
